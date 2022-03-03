@@ -97,10 +97,10 @@ func TestSqlInjection(t *testing.T) {
 
 	ctx := context.Background()
 
-	username := "'or=1='"
+	username := "admin'; #"
 	password := "admin"
 
-	script := "SELECT username FROM user WHERE username = '" + username + "' AND password = '" + password + "'"
+	script := "SELECT username FROM user WHERE username = '" + username + "' AND password = '" + password + "' LIMIT 1"
 	rows, err := db.QueryContext(ctx, script)
 
 	if err != nil {
@@ -119,5 +119,34 @@ func TestSqlInjection(t *testing.T) {
 		fmt.Println("Login Success", userName)
 	} else {
 		fmt.Println("Login Failed")
+	}
+}
+
+func TestQuerySqlInjectionSafe(t *testing.T) {
+	db := GetConnection()
+	defer db.Close()
+
+	ctx := context.Background()
+
+	username := "admin"
+	password := "admin"
+
+	script := "SELECT username FROM user WHERE username=? AND password=? LIMIT 1"
+	rows, err := db.QueryContext(ctx, script, username, password)
+
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		var userName string
+		err := rows.Scan(&userName)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("Login Success. ", userName)
+	} else {
+		fmt.Println("Login Failed. ")
 	}
 }
