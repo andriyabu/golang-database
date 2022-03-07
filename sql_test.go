@@ -203,7 +203,7 @@ func TestPrepareStatement(t *testing.T) {
 	}
 	defer statement.Close()
 
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 100; i++ {
 		email := "user" + strconv.Itoa(i) + "@gmail.com"
 		comment := "Komentar ke " + strconv.Itoa(i)
 
