@@ -45,7 +45,7 @@ func (repository *commentRepositoryImpl) FindById(ctx context.Context, id int32)
 		rows.Scan(&comment.Id, &comment.Email, &comment.Comment)
 		return comment, nil
 	} else {
-		return comment, errors.New("Id", strconv.Itoa(int(id))+" Not Found! ")
+		return comment, errors.New("Id" + strconv.Itoa(int(id)) + " Not Found! ")
 	}
 }
 
